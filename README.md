@@ -6,6 +6,7 @@ Usage:
 ```php
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
 
 class MyController extends ControllerBase {
