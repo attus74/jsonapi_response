@@ -1,0 +1,10 @@
+## JSON:API Response
+---
+
+name: JSON:API Response
+description: JSON:API Response based on Custom Data
+type: module
+core_version_requirement: ^8.9 || ^9
+package: Web services
+dependencies:
+  - jsonapi

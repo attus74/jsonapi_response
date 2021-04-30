@@ -1,0 +1,15 @@
+{
+  "name": "attus/jsonapi_response",
+  "description": "JSON:API Response based on Custom Data",
+  "type": "attus-module",
+  "require": {
+    "drupal/core": "^8.9 || ^9",
+    "attus/installer": "^1"
+  },
+  "authors": [
+    {
+      "name": "Attila Németh",
+      "role": "developer"
+    }
+  ]
+}
