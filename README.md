@@ -1,6 +1,6 @@
 # JSON:API Response
 
-A Drupal 8/9 module for costum JSON:API Entity responses.
+A Drupal 8/9 module for custom JSON:API Entity responses.
 
 Usage:
 ```php
