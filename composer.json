@@ -12,7 +12,7 @@
     }
   ],
   "keywords": [
-    "Drupal", "JSON:API", "Entity"
+    "Drupal", "JSON API", "Entity"
   ],
   "homepage": "https://github.com/attus74/jsonapi_response",
   "license": "GPL-3.0-or-later",
