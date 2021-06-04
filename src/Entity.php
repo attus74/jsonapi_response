@@ -4,9 +4,9 @@ namespace Drupal\jsonapi_response;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Cache\CacheableResponseInterface;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\jsonapi\Access\EntityAccessChecker;
+use Drupal\jsonapi\IncludeResolver;
 use Drupal\jsonapi\Normalizer\NormalizerBase;
 use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
@@ -30,12 +30,16 @@ class Entity {
   // JSON:API Normalizer
   private     $_jsonApiNormalizer;
   
-  // A Drupal Entity
+  // JSON:API Include Resolver
+  private     $_includeResolver;
+  
+  // A unique key built of the entities
   private     $_entityKey;
   
-  public function __construct(EntityAccessChecker $accessChecker, NormalizerBase $normalizer) {
+  public function __construct(EntityAccessChecker $accessChecker, NormalizerBase $normalizer, IncludeResolver $includeResolver) {
     $this->_jsonApiAccessChecker = $accessChecker;
     $this->_jsonApiNormalizer = $normalizer;
+    $this->_includeResolver = $includeResolver;
   }
   
   public function entityIndividualResponse(EntityInterface $entity)
@@ -52,11 +56,13 @@ class Entity {
   /**
    * A collection of entities as JSON:API Response
    * @param array $entities
-   *  The entities
+   *  Data entities
+   * @param array $includeFields
+   *  Included Fields
    * @return CacheableResponseInterface
    * @throws NoEntityException
    */
-  public function entityCollectionResponse(array $entities): CacheableResponseInterface 
+  public function entityCollectionResponse(array $entities, array $includeFields = NULL): CacheableResponseInterface 
   {
     foreach($entities as $entity) {
       if (!$entity instanceof EntityInterface) {
@@ -72,8 +78,14 @@ class Entity {
       $this->_entityKey .= ':' . $entity->id();
       $resources[$entity->id()] = $this->_jsonApiAccessChecker->getAccessCheckedResourceObject($entity);
     }
-    $data = new ResourceObjectData($resources); 
-    return $this->_entityDataResponse($data);
+    $data = new ResourceObjectData($resources);
+    if (!is_null($includeFields)) {
+      $includes = $this->_includeResolver->resolve($data, implode(',', $includeFields));
+    }
+    else {
+      $includes = NULL;
+    }
+    return $this->_entityDataResponse($data, $includes);
   }
   
   /**
@@ -81,9 +93,12 @@ class Entity {
    * @param TopLevelDataInterface $data
    * @return CacheableResponseInterface
    */
-  private function _entityDataResponse(TopLevelDataInterface $data): CacheableResponseInterface
+  private function _entityDataResponse(TopLevelDataInterface $data, ResourceObjectData $includes = NULL): CacheableResponseInterface
   {
-    $document = new JsonApiDocumentTopLevel($data, new NullIncludedData(), new LinkCollection([]), []);
+    if (is_null($includes)) {
+      $includes = new NullIncludedData();
+    }
+    $document = new JsonApiDocumentTopLevel($data, $includes, new LinkCollection([]), []);
     $response = new CacheableResourceResponse($document, 200);
     $response->addCacheableDependency($this->_entityKey);
     return $response;

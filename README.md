@@ -2,7 +2,8 @@
 
 A Drupal 8/9 module for custom JSON:API Entity responses.
 
-Usage:
+## Usage
+
 ```php
 
 use Drupal\Core\Controller\ControllerBase;
@@ -31,6 +32,15 @@ class MyController extends ControllerBase {
   {
     $entities = $this->getEntitiesForResponse();
     return \Drupal::service('jsonapi_response.entity')->entityCollectionResponse($entities);
+  }
+ 
+  /**
+   * An entity collection in JSON:API Format with includes
+   */
+  public function getMyEntityCollectionWithIncludes(): CacheableResponseInterface
+  {
+    $entities = $this->getEntitiesForResponse();
+    return \Drupal::service('jsonapi_response.entity')->entityCollectionResponse($entities, [$fieldName1, $fieldName2]);
   }
 
 }
