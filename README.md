@@ -1,6 +1,11 @@
 # JSON:API Response
 
-A Drupal 8/9 module for custom JSON:API Entity responses.
+A Drupal 9 module for custom JSON:API Entity responses.
+
+JSON:API module of Drupal 9 uses different classes, so that it is unfortunately no more possible 
+to use the same module for both Drupal Core versions. 
+
+Version 2.0 of this module supports only Drupal 9.
 
 ## Usage
 

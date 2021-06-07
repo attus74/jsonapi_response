@@ -13,7 +13,7 @@ use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
 use Drupal\jsonapi\JsonApiResource\NullIncludedData;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
 use Drupal\jsonapi\JsonApiResource\TopLevelDataInterface;
-use Drupal\jsonapi\ResourceResponse;
+use Drupal\jsonapi\CacheableResourceResponse;
 use Drupal\jsonapi_response\Exception\NoEntityException;
 
 /**
@@ -99,7 +99,7 @@ class Entity {
       $includes = new NullIncludedData();
     }
     $document = new JsonApiDocumentTopLevel($data, $includes, new LinkCollection([]), []);
-    $response = new ResourceResponse($document, 200);
+    $response = new CacheableResourceResponse($document, 200);
     $response->addCacheableDependency($this->_entityKey);
     return $response;
   }
