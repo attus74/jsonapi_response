@@ -2,12 +2,12 @@
 
 namespace Drupal\jsonapi_response;
 
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\jsonapi\Access\EntityAccessChecker;
 use Drupal\jsonapi\IncludeResolver;
-use Drupal\jsonapi\Normalizer\NormalizerBase;
 use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
 use Drupal\jsonapi\JsonApiResource\NullIncludedData;
@@ -36,7 +36,7 @@ class Entity {
   // A unique key built of the entities
   private     $_entityKey;
   
-  public function __construct(EntityAccessChecker $accessChecker, NormalizerBase $normalizer, IncludeResolver $includeResolver) {
+  public function __construct(EntityAccessChecker $accessChecker, NormalizerInterface $normalizer, IncludeResolver $includeResolver) {
     $this->_jsonApiAccessChecker = $accessChecker;
     $this->_jsonApiNormalizer = $normalizer;
     $this->_includeResolver = $includeResolver;
