@@ -2,6 +2,11 @@
 
 A Drupal 9 module for custom JSON:API Entity responses.
 
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/attus74/jsonapi_response/graphs/commit-activity)
+[![GitHub license](https://img.shields.io/github/license/attus74/jsonapi_response.svg)](https://github.com/attus74/jsonapi_response/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/attus74/jsonapi_response.svg)](https://GitHub.com/attus74/jsonapi_response/releases/)
+[![GitHub issues](https://img.shields.io/github/issues/attus74/jsonapi_response.svg)](https://GitHub.com/attus74/jsonapi_response/issues/)
+
 JSON:API module of Drupal 9 uses different classes, so that it is unfortunately no more possible 
 to use the same module for both Drupal Core versions. 
 
