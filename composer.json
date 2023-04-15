@@ -4,7 +4,7 @@
   "type": "drupal-module",
   "require": {
     "drupal/core": "^9.2 || ^10.0",
-    "symfony/serializer": "^4.4 || ^5.0"
+    "symfony/serializer": "^4.4 || ^5.0 || ^6.0"
   },
   "authors": [
     {
