@@ -22,7 +22,7 @@ use Drupal\jsonapi_response\Exception\NoEntityException;
  * @author Attila Németh
  * 26.02.2021
  */
-class Entity {
+class Entity implements JsonapiEntityResponseInterface {
   
   // JSON:APi Access Checker
   private     $_jsonApiAccessChecker;
@@ -42,7 +42,13 @@ class Entity {
     $this->_includeResolver = $includeResolver;
   }
   
-  public function entityIndividualResponse(EntityInterface $entity)
+  /**
+   * {@inheritDoc}
+   * @param EntityInterface $entity
+   * @return CacheableResponseInterface
+   * @throws @var:$this@fld:_jsonApiAccessChecker@mtd:getAccessCheckedResourceObject
+   */
+  public function entityIndividualResponse(EntityInterface $entity): CacheableResponseInterface 
   {
     $resource = $this->_jsonApiAccessChecker->getAccessCheckedResourceObject($entity);
     if ($resource instanceof EntityAccessDeniedHttpException) {

@@ -1,6 +1,6 @@
 # JSON:API Response
 
-A Drupal 9-10 module for custom JSON:API Entity responses.
+A Drupal 10 module for custom JSON:API Entity responses.
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/attus74/jsonapi_response/graphs/commit-activity)
 [![GitHub license](https://img.shields.io/github/license/attus74/jsonapi_response.svg)](https://github.com/attus74/jsonapi_response/blob/master/LICENSE)
@@ -11,11 +11,25 @@ A Drupal 9-10 module for custom JSON:API Entity responses.
 
 ```php
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
+use Drupal\jsonapi_response\JsonapiEntityResponseInterface;
 
 class MyController extends ControllerBase {
+
+  private     $_jsonapiResponseEntity;
+
+  public function __construct(JsonapiEntityResponseInterface $jsonapiResponseEntity) {
+    $this->_jsonapiResponseEntity = $jsonapiResponseEntity;
+  }
+  
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('jsonapi_response.entity'),
+    );
+  }
 
   /**
    * A single entity in JSON:API Format
@@ -23,7 +37,7 @@ class MyController extends ControllerBase {
   public function getMyEntity(): CacheableResponseInterface
   {
     $entity = $this->getEntityForResponse();
-    $response = \Drupal::service('jsonapi_response.entity')->entityIndividualResponse($entity);
+    $response = $this->_jsonapiResponseEntity->entityIndividualResponse($entity);
     $cache = new CacheableMetadata();
     $cache->setCacheMaxAge(0);
     $response->addCacheableDependency($cache);
@@ -36,7 +50,7 @@ class MyController extends ControllerBase {
   public function getMyEntityCollection(): CacheableResponseInterface
   {
     $entities = $this->getEntitiesForResponse();
-    return \Drupal::service('jsonapi_response.entity')->entityCollectionResponse($entities);
+    return $this->_jsonapiResponseEntity->entityCollectionResponse($entities);
   }
  
   /**
@@ -45,7 +59,7 @@ class MyController extends ControllerBase {
   public function getMyEntityCollectionWithIncludes(): CacheableResponseInterface
   {
     $entities = $this->getEntitiesForResponse();
-    return \Drupal::service('jsonapi_response.entity')->entityCollectionResponse($entities, [$fieldName1, $fieldName2]);
+    return $this->_jsonapiResponseEntity->entityCollectionResponse($entities, [$fieldName1, $fieldName2]);
   }
 
 }
