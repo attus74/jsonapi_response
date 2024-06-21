@@ -3,7 +3,7 @@
   "description": "JSON:API Response based on Custom Data",
   "type": "drupal-module",
   "require": {
-    "drupal/core": "^10.1"
+    "drupal/core": "^10.2 || ^11.0"
   },
   "authors": [
     {
