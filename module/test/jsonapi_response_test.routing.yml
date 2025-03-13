@@ -1,0 +1,6 @@
+jsonapi.response.test.node.individual:
+  path: json/api/response/test/node/individual
+  defaults:
+    _controller: Drupal\jsonapi_response_test\Controller\Node::getIndividual
+  requirements:
+    _access: 'TRUE'

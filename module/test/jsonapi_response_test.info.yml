@@ -1,0 +1,6 @@
+name: JSON:API Response Test
+hidden: true
+type: module
+core_version_requirement: ^11.1 || ^12.0
+dependencies:
+  - drupal:jsonapi_response

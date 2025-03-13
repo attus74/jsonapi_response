@@ -2,7 +2,6 @@
 
 namespace Drupal\jsonapi_response;
 
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
@@ -14,6 +13,7 @@ use Drupal\jsonapi\JsonApiResource\NullIncludedData;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
 use Drupal\jsonapi\JsonApiResource\TopLevelDataInterface;
 use Drupal\jsonapi\CacheableResourceResponse;
+use Drupal\jsonapi\JsonApiResource\IncludedData;
 use Drupal\jsonapi_response\Exception\NoEntityException;
 
 /**
@@ -23,32 +23,31 @@ use Drupal\jsonapi_response\Exception\NoEntityException;
  * 26.02.2021
  */
 class Entity implements JsonapiEntityResponseInterface {
-  
+
   // JSON:APi Access Checker
   private     $_jsonApiAccessChecker;
-  
-  // JSON:API Normalizer
-  private     $_jsonApiNormalizer;
-  
+
   // JSON:API Include Resolver
   private     $_includeResolver;
-  
+
   // A unique key built of the entities
   private     $_entityKey;
-  
-  public function __construct(EntityAccessChecker $accessChecker, NormalizerInterface $normalizer, IncludeResolver $includeResolver) {
+
+  public function __construct(EntityAccessChecker $accessChecker, IncludeResolver $includeResolver) {
     $this->_jsonApiAccessChecker = $accessChecker;
-    $this->_jsonApiNormalizer = $normalizer;
     $this->_includeResolver = $includeResolver;
   }
-  
+
   /**
-   * {@inheritDoc}
+   * An individual Entity in JSON:API format
+   *
    * @param EntityInterface $entity
+   *  The original Drupal entity
+   * @param array $includeFields
+   *  Included Fields, Optional
    * @return CacheableResponseInterface
-   * @throws @var:$this@fld:_jsonApiAccessChecker@mtd:getAccessCheckedResourceObject
    */
-  public function entityIndividualResponse(EntityInterface $entity): CacheableResponseInterface 
+  public function entityIndividualResponse(EntityInterface $entity, array $includeFields = NULL): CacheableResponseInterface
   {
     $resource = $this->_jsonApiAccessChecker->getAccessCheckedResourceObject($entity);
     if ($resource instanceof EntityAccessDeniedHttpException) {
@@ -56,9 +55,15 @@ class Entity implements JsonapiEntityResponseInterface {
     }
     $data = new ResourceObjectData([$resource], 1);
     $this->_entityKey = $entity->getEntityTypeId() . ':' . $entity->id();
-    return $this->_entityDataResponse($data);
+    if (!is_null($includeFields)) {
+      $includes = $this->_includeResolver->resolve($data, implode(',', $includeFields));
+    }
+    else {
+      $includes = NULL;
+    }
+    return $this->_entityDataResponse($data, $includes);
   }
-  
+
   /**
    * A collection of entities as JSON:API Response
    * @param array $entities
@@ -68,11 +73,11 @@ class Entity implements JsonapiEntityResponseInterface {
    * @return CacheableResponseInterface
    * @throws NoEntityException
    */
-  public function entityCollectionResponse(array $entities, array $includeFields = NULL): CacheableResponseInterface 
+  public function entityCollectionResponse(array $entities, array $includeFields = NULL): CacheableResponseInterface
   {
     foreach($entities as $entity) {
       if (!$entity instanceof EntityInterface) {
-        throw new NoEntityException(); 
+        throw new NoEntityException();
       }
     }
     $resources = [];
@@ -93,13 +98,16 @@ class Entity implements JsonapiEntityResponseInterface {
     }
     return $this->_entityDataResponse($data, $includes);
   }
-  
+
   /**
-   * The actual data response
+   * The actual JSON:API response
+   *
    * @param TopLevelDataInterface $data
+   * @param IncludedData $includes
+   *              Optional
    * @return CacheableResponseInterface
    */
-  private function _entityDataResponse(TopLevelDataInterface $data, ResourceObjectData $includes = NULL): CacheableResponseInterface
+  private function _entityDataResponse(TopLevelDataInterface $data, IncludedData $includes = NULL): CacheableResponseInterface
   {
     if (is_null($includes)) {
       $includes = new NullIncludedData();
@@ -109,5 +117,5 @@ class Entity implements JsonapiEntityResponseInterface {
     $response->addCacheableDependency($this->_entityKey);
     return $response;
   }
-  
+
 }

@@ -4,7 +4,6 @@
 services:
   jsonapi_response.entity:
     class: Drupal\jsonapi_response\Entity
-    arguments: 
+    arguments:
     - '@jsonapi.entity_access_checker'
-    - '@serializer.normalizer.resource_object.jsonapi'
     - '@jsonapi.include_resolver'
