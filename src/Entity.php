@@ -47,7 +47,7 @@ class Entity implements JsonapiEntityResponseInterface {
    *  Included Fields, Optional
    * @return CacheableResponseInterface
    */
-  public function entityIndividualResponse(EntityInterface $entity, array $includeFields = NULL): CacheableResponseInterface
+  public function entityIndividualResponse(EntityInterface $entity, ?array $includeFields = NULL): CacheableResponseInterface
   {
     $resource = $this->_jsonApiAccessChecker->getAccessCheckedResourceObject($entity);
     if ($resource instanceof EntityAccessDeniedHttpException) {
@@ -73,7 +73,7 @@ class Entity implements JsonapiEntityResponseInterface {
    * @return CacheableResponseInterface
    * @throws NoEntityException
    */
-  public function entityCollectionResponse(array $entities, array $includeFields = NULL): CacheableResponseInterface
+  public function entityCollectionResponse(array $entities, ?array $includeFields = NULL): CacheableResponseInterface
   {
     foreach($entities as $entity) {
       if (!$entity instanceof EntityInterface) {
@@ -107,7 +107,7 @@ class Entity implements JsonapiEntityResponseInterface {
    *              Optional
    * @return CacheableResponseInterface
    */
-  private function _entityDataResponse(TopLevelDataInterface $data, IncludedData $includes = NULL): CacheableResponseInterface
+  private function _entityDataResponse(TopLevelDataInterface $data, ?IncludedData $includes = NULL): CacheableResponseInterface
   {
     if (is_null($includes)) {
       $includes = new NullIncludedData();

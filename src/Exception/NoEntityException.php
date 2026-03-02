@@ -3,6 +3,7 @@
 namespace Drupal\jsonapi_response\Exception;
 
 use Exception;
+use Throwable;
 
 /**
  * No Entity Exception
@@ -12,7 +13,7 @@ use Exception;
  */
 class NoEntityException extends Exception {
 
-  public function __construct(string $message = "The oobject is not an entity", int $code = 416, \Throwable $previous = NULL) {
+  public function __construct(string $message = "The oobject is not an entity", int $code = 416, ?Throwable $previous = NULL) {
     parent::__construct($message, $code, $previous);
   }
 

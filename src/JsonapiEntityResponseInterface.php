@@ -23,7 +23,7 @@ interface JsonapiEntityResponseInterface {
    *  Included Fields, Optional
    * @return CacheableResponseInterface
    */
-  public function entityIndividualResponse(EntityInterface $entity, array $includeFields = NULL): CacheableResponseInterface;
+  public function entityIndividualResponse(EntityInterface $entity, ?array $includeFields = NULL): CacheableResponseInterface;
 
   /**
    * A collection of entities as JSON:API Response
@@ -34,6 +34,6 @@ interface JsonapiEntityResponseInterface {
    * @return CacheableResponseInterface
    * @throws NoEntityException
    */
-  public function entityCollectionResponse(array $entities, array $includeFields = NULL): CacheableResponseInterface;
+  public function entityCollectionResponse(array $entities, ?array $includeFields = NULL): CacheableResponseInterface;
 
 }
